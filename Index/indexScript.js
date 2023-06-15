@@ -1,8 +1,10 @@
 var usuario = sessionStorage.getItem('usuario');
  const nombre  = document.getElementById("nombreUser");
  console.log("usu : " + usuario)
- if(usuario == ""){
-    nombre.textContent = "Perfil";
+ function ver (){
+    if((usuario == null) || (usuario == "" ) ){
+        nombre.textContent = "Perfil";
+     }
  }
 function getTragos(){
     const cocktailContainer = document.getElementById('tragos-caja');
@@ -88,7 +90,7 @@ function getTragos(){
 
 function getCredentials(){
     
-    if( usuario != "" ){
+    if( usuario != "" && usuario != null){
  
         nombre.href ="../Perfil/Perfil.html"; 
         nombre.textContent = usuario; 
@@ -98,5 +100,6 @@ function getCredentials(){
         nombre.textContent = "Perfil";
     }
 }
+ver(); 
 getTragos();
 getCredentials(); 
