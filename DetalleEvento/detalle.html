@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detalles del Cóctel</title>
+    <link rel="stylesheet" type="text/css" href="styleDetalle.css">
+</head>
+<body>
+    <button id="like" onclick="toggleLike()" ><img id="corazon" src="../Logo/corazonvacio.png"/></button>
+    <div id="trago-detalle" class="trago-detalle">
+        <h1 id="nombreTrago">Detalles del Cóctel</h1>
+        <div id="foto"></div>
+        <h2>Ingredientes:</h2>
+        <ul id="ingredientes"></ul>
+        <h2>Pasos a seguir:</h2>
+        <ol id="pasos"></ol>
+    </div>
+   
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-auth.js"></script>
+
+    <script>
+        const firebaseConfig = {
+        apiKey: "AIzaSyCECiCk4tWmTY6CjF2_IGhmdm05soMX46U",
+        authDomain: "organiko-cedb5.firebaseapp.com",
+        projectId: "organiko-cedb5",
+        storageBucket: "organiko-cedb5.appspot.com",
+        messagingSenderId: "182438650817",
+        appId: "1:182438650817:web:65272dde3f1ed36dba4540"
+      };
+      
+        // Inicializa Firebase
+        firebase.initializeApp(firebaseConfig);
+        var urlParams = new URLSearchParams(window.location.search);
+        var drinkId = urlParams.get("id");
+
+        
+        var liked = false;
+        var drink ; 
+
+        function toggleLike() {
+            liked = !liked;
+            var likeIcon = document.getElementById("corazon");
+
+            if(usuario == null){
+                alert("Inicie sesión para agregar a favoritos un trago"); 
+                console.log("id : " + usuario); 
+            
+            }else{
+
+                if (liked) {
+                    likeIcon.src = "../Logo/corazonLleno.png";
+                
+                    var fav = {
+                    drink : drinkId,
+                    user :  usuario
+                    };
+            
+                    db.collection("favoritos").add(fav)
+                    .then(function(docRef) {
+                        console.log("Documento guardado con ID:", docRef.id);
+                    })
+                    .catch(function(error) {
+                        console.error("Error al guardar el documento:", error);
+                    });
+            
+                } else {
+                    likeIcon.src = "../Logo/corazonvacio.png";
+                }
+            }
+        }    
+
+    </script>
+
+    <script src="detalle.js"></script>
+</body>
+</html>

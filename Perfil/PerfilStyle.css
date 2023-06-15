@@ -1,0 +1,26 @@
+*{
+    border: 0; 
+    padding:0; 
+    margin: 0;
+}
+header{
+    background-color: #116D6E;
+}
+#cabeza{
+    background-color: #116D6E;
+    text-align: center;
+}
+footer{
+    background-color: #116D6E;
+}
+img{
+    height: 70px;
+    width: 80px;
+    background-color: #fff;
+    border-radius: 60px;
+    padding: 20px;
+}
+#cerrarSesion{
+    text-align: right;
+    padding: 15px;
+}
