@@ -1,3 +1,9 @@
+var usuario = sessionStorage.getItem('usuario');
+ const nombre  = document.getElementById("nombreUser");
+ console.log("usu : " + usuario)
+ if(usuario == ""){
+    nombre.textContent = "Perfil";
+ }
 function getTragos(){
     const cocktailContainer = document.getElementById('tragos-caja');
 
@@ -32,13 +38,15 @@ function getTragos(){
             });
         });
 }
-function buscar(){
-    const entr = document.getElementById('entrada');
 
+   
     document.getElementById('busqueda-boton').addEventListener('click', function() {
+        var bebidas = document.getElementById("tragos-caja"); 
+        bebidas.innerHTML= '';
         var nombreBebida = document.getElementById('entrada');
+        console.log("nombre : " + nombreBebida.value)
     
-        fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=' + nombreBebida)
+        fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${nombreBebida.value}`)
         .then(function(response) {
             return response.json();
         })
@@ -49,25 +57,27 @@ function buscar(){
                 // Verifica si se encontró una bebida
                 if (bebida) {
                 // Crea una caja para mostrar la foto y el nombre de la bebida
-                var caja = document.createElement('div');
-                caja.className = 'bebida-box';
-        
-                // Crea la etiqueta de imagen y establece su fuente (URL de la foto)
-                var imagen = document.createElement('img');
-                imagen.src = bebida.strDrinkThumb;
-        
-                // Crea la etiqueta de título y establece el nombre de la bebida
-                var titulo = document.createElement('h3');
-                titulo.textContent = bebida.strDrink;
-        
-                // Agrega la imagen y el título a la caja
-                caja.appendChild(imagen);
-                caja.appendChild(titulo);
-        
-                // Agrega la caja al documento
-                document.body.appendChild(caja);
+                const cocktailBox = document.createElement('div');
+                cocktailBox.classList.add('cocktail-box');
+
+
+                const cocktailImage = document.createElement('img');
+                cocktailImage.src = bebida.strDrinkThumb;
+                cocktailImage.alt = bebida.strDrink;
+                cocktailBox.appendChild(cocktailImage);
+                
+                const cocktailName = document.createElement('p');
+                cocktailName.textContent = bebida.strDrink;
+                cocktailBox.appendChild(cocktailName);
+
+                // Al hacer clic en una caja, muestra más información
+                cocktailBox.addEventListener('click', () => {
+                    window.location.href = `../DetalleEvento/detalle.html?id=${bebida.idDrink}`;
+                });
+
+                bebidas.appendChild(cocktailBox);
                 } else {
-                console.log('Bebida no encontrada');
+              alert('Bebida no encontrada');
                 }
             });
         })
@@ -75,20 +85,18 @@ function buscar(){
             console.log('Error:', error);
         });
     });
-}    
-function getCredentials(){
-    var usuario = sessionStorage.getItem('usuario');
-    const nombre  = document.getElementById("nombreUser");
-    if( usuario != null ){
 
-        
+function getCredentials(){
+    
+    if( usuario != "" ){
+ 
         nombre.href ="../Perfil/Perfil.html"; 
         nombre.textContent = usuario; 
     }
     else{
         nombre.href ="../InicioSesion/inicioSesion.html"; 
+        nombre.textContent = "Perfil";
     }
 }
 getTragos();
-buscar();
 getCredentials(); 

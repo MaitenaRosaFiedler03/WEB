@@ -61,13 +61,13 @@
       var user = firebase.auth().currentUser;
 
      
-      sessionStorage.setItem('usuario', user.email);
-
+      sessionStorage.setItem('usuario', email);
+      console.log(" user " + usuario); 
 
       var usuario = sessionStorage.getItem('usuario');
     
 
-      console.log(" user " + usuario); 
+      
       window.location.href = "../Index/index.html"; 
     })
     .catch(function(error) {

@@ -6,10 +6,21 @@
 </head>
 <body>
     <header>
-        <p id ="cerrarSesion">Cerrar Sesión</p>
-    </header>
+        <nav>
+          <h1><a href="../Index/index.html"><img id="logo" src="../Logo/LogoOrganiko.png"> </a></h1>
+    
+            
+          <div class="dropp">
+            <ul>
+              <li><a id="cerrarSesion" href="#">Cerrar Sesión</a></li>
+
+            </ul>
+          </div>
+        </nav>
+      </header>
+
     <div id="cabeza">
-        <img src="../Logo/user.png"/>
+        <img id="foto" src="../Logo/user.png"/>
         <h2 id="nombreUser"></h2>
     </div>
     <div id="tragosFav">
@@ -20,7 +31,11 @@
             <p>&copy; 2023 Mi Página Web | Todos los derechos reservados</p>
           </div>
     </footer>
-    <script src="PerfilScript.js">
+
+    <script src="PerfilScript.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script >
 
 
         const cocktailContainer = document.getElementById('tragosFav');
@@ -28,60 +43,67 @@
         const firebaseConf = {
             apiKey: "AIzaSyCECiCk4tWmTY6CjF2_IGhmdm05soMX46U",
             authDomain: "organiko-cedb5.firebaseapp.com",
+            databaseURL: "https://organiko-cedb5-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "organiko-cedb5",
             storageBucket: "organiko-cedb5.appspot.com",
             messagingSenderId: "182438650817",
             appId: "1:182438650817:web:65272dde3f1ed36dba4540"
-          };
-          
+        };
+
         
-          // Inicializa Firebase
+
           firebase.initializeApp(firebaseConf);
         
-
-        var favoritosRef = firebase.database().ref('favs');
-
-        favoritosRef.once('userId').then(function(snapshot) {
-          // Iterar sobre los documentos en la colección
-          var favoritos = snapshot.val();
-          favoritos.forEach(function(doc) {
-            // Obtén el drinkId de cada favorito
-            var drinkId = doc.data().drinkId;
-      
-            // Realiza la consulta a la API de TheCocktailDB para obtener los detalles de la bebida
-            var url = "https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=" + drinkId;
-            
-            fetch(url)
-              .then(function(response) {
-                return response.json();
-              })
-              .then(function(data) {
-                const cocktails = data.drinks;
+          var favoritosRef = firebase.database().ref('favs');
+       
+          var favoritos;
     
-                // Crea una caja por cada cóctel
-                cocktails.forEach(cocktail => {
+            favoritosRef.once('value').then(function(snapshot) {
+            
+               favoritos = snapshot.val();
+               
+                
+                console.log("a :" + favoritos);
+                for (var key in favoritos) {
+                    console.log(favoritos[key])
+                    var valores = favoritos[key];
+                    var usuario = sessionStorage.getItem('usuario');
+                    console.log("valores t _" + usuario)
+                    buscaTrago(valores["tragoid"])
+                }
+            });    
+           
+            function buscaTrago(id){
+                fetch('https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i='+id)
+                .then(response => response.json())
+                .then(data => {
+                    const cocktails = data.drinks[0];
+
+                    // Crea una caja por cada cóctel
+                  
                     const cocktailBox = document.createElement('div');
                     cocktailBox.classList.add('cocktail-box');
-    
-    
+
+
                     const cocktailImage = document.createElement('img');
-                    cocktailImage.src = cocktail.strDrinkThumb;
-                    cocktailImage.alt = cocktail.strDrink;
+                    cocktailImage.src = cocktails.strDrinkThumb;
+                    cocktailImage.alt = cocktails.strDrink;
                     cocktailBox.appendChild(cocktailImage);
                     
                     const cocktailName = document.createElement('p');
-                    cocktailName.textContent = cocktail.strDrink;
+                    cocktailName.textContent = cocktails.strDrink;
                     cocktailBox.appendChild(cocktailName);
-    
+
                     // Al hacer clic en una caja, muestra más información
                     cocktailBox.addEventListener('click', () => {
-                        window.location.href = `../DetalleEvento/detalle.html?id=${cocktail.idDrink}`;
+                        window.location.href = `../DetalleEvento/detalle.html?id=${cocktails.idDrink}`;
                     });
-    
+
                     cocktailContainer.appendChild(cocktailBox);
+                   
                 });
-            });
-          });
-        });
+            
+            }
+        
     </script>
 </body>    
